@@ -56,3 +56,10 @@ class EqSide:
 class Equation:
     left_side: EqSide
     right_side: EqSide
+
+
+@dataclasses.dataclass(frozen=True)
+class CanonicalEquationSystem:
+    var_names: list[str]
+    var_coefficients: np.ndarray   # shape=(n_eq, n_var)
+    free_coefficients: np.ndarray  # shape=(n_eq, 1)
