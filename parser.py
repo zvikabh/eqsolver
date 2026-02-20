@@ -54,6 +54,7 @@ class Parser:
         return token
 
     def parse_Root(self) -> list[ct.Equation]:
+        # Root       -> Eq NEWLINE Root?
         eqs = [self.parse_Eq()]
         self.consume(ct.TokenType.NEWLINE)
         if self.at_eof:
@@ -62,18 +63,21 @@ class Parser:
         return eqs
 
     def parse_Eq(self) -> ct.Equation:
+        # Eq         -> Side '=' Side
         left_side = self.parse_Side()
         self.consume(ct.TokenType.EQUALITY)
         right_side = self.parse_Side()
         return ct.Equation(left_side=left_side, right_side=right_side)
 
     def parse_Side(self) -> ct.EqSide:
+        # Side       -> FirstTerm OtherTerms?
         terms = [self.parse_FirstTerm()]
         if self.cur_token.type == ct.TokenType.SIGN:
             terms.extend(self.parse_OtherTerms())
         return ct.EqSide(terms=terms)
 
     def parse_FirstTerm(self) -> ct.Term:
+        # FirstTerm  -> Sign? ActualTerm
         if self.cur_token.type == ct.TokenType.SIGN:
             sign = self.consume(ct.TokenType.SIGN)
         else:
@@ -82,6 +86,7 @@ class Parser:
         return _apply_sign_to_term(term, sign)
 
     def parse_OtherTerms(self) -> list[ct.Term]:
+        # OtherTerms -> Sign ActualTerm OtherTerms?
         sign = self.consume(ct.TokenType.SIGN)
         term = self.parse_ActualTerm()
         terms = [_apply_sign_to_term(term, sign)]
@@ -90,6 +95,7 @@ class Parser:
         return terms
 
     def parse_ActualTerm(self) -> ct.Term:
+        # ActualTerm -> INTEGER? VARNAME | INTEGER
         if self.cur_token.type == ct.TokenType.NUMBER:
             number = self.consume(ct.TokenType.NUMBER).value
         else:
