@@ -15,7 +15,6 @@ import dataclasses
 import common_types as ct
 
 
-
 def _apply_sign_to_term(term: ct.Term, sign: ct.Token) -> ct.Term:
     if sign == ct.PLUS_SIGN:
         return term

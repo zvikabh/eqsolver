@@ -29,3 +29,11 @@ def canonicalize(eqs: list[ct.Equation]) -> ct.CanonicalEquationSystem:
         free_coefficients=free_coefficients
     )
 
+
+def solve(eq_sys: ct.CanonicalEquationSystem) -> dict[str, float]:
+    """Solves the system of equations, returning a mapping from variable to its solution value.
+
+    Raises LinAlgError if there are no solutions, or infinite solutions.
+    """
+    sol = np.linalg.solve(eq_sys.var_coefficients, eq_sys.free_coefficients)
+    return dict(zip(eq_sys.var_names, np.squeeze(sol).tolist()))
