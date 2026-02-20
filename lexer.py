@@ -1,16 +1,3 @@
-"""Parser for a set of linear equations.
-
-Grammar:
-
-Root       -> Eq (NEWLINE Root)?
-Eq         -> Side '=' Side
-Side       -> FirstTerm OtherTerms?
-FirstTerm  -> Sign? ActualTerm
-OtherTerms -> Sign ActualTerm
-ActualTerm -> INTEGER? VARNAME | INTEGER
-Sign       -> '+' | '-'
-"""
-
 from typing import Iterator
 
 import common_types as ct
@@ -24,9 +11,11 @@ def lexer(input: str) -> Iterator[ct.Token]:
         elif input[pos].isspace():
             pass
         elif input[pos] == '=':
-            yield ct.Token(type=ct.TokenType.EQUALITY, value=input[pos])
-        elif input[pos] in ('+', '-'):
-            yield ct.Token(type=ct.TokenType.SIGN, value=input[pos])
+            yield ct.EQUALITY
+        elif input[pos] == '+':
+            yield ct.PLUS_SIGN
+        elif input[pos] == '-':
+            yield ct.MINUS_SIGN
         elif input[pos].isalpha():
             yield ct.Token(type=ct.TokenType.VARNAME, value=input[pos])
         elif input[pos].isdigit():
